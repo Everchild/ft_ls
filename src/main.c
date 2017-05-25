@@ -32,10 +32,10 @@ int					main(int argc, char **argv)
 	t_env			env;
 
 	init_env(&env);
-//	if (argc > 1)
-//		parse_arg(&env, argv + 1);
+	if (argc > 1)
+		parse_arg(&env, argv + 1);
 //	ft_ls(&env);
 	destroy_env(&env);
-	while (1);
+//	while (1);
 	return (0);
 }

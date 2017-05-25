@@ -23,7 +23,7 @@ SRC = main.c \
 	  parse_arg.c
 OBJ = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
 
-CC = gcc
+CC = clang
 CFLAGS = -g -c -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIB_INC)
 LFLAGS = -L$(LIB_DIR) -lft
 

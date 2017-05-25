@@ -13,28 +13,44 @@
 #ifndef FT_LS_H
 # define FT_LS_H
 
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <dirent.h>
 # include <libft.h>
+# include <stdio.h>
+
+# define NB_OPT 5
 
 typedef enum		e_opt
 {
 	NO_OPT = 0,
-	LONG = 1 << 1,
-	RECURS = 1 << 2,
-	HIDDEN = 1 << 3,
-	REVERSE = 1 << 4,
-	TIME =  1 << 5
+	O_LONG = 1 << 1,
+	O_RECURS = 1 << 2,
+	O_ALL = 1 << 3,
+	O_REVERSE = 1 << 4,
+	O_TIME =  1 << 5
 }					t_opt;
 
-/*typedef struct		s_data
+typedef struct		s_args
 {
-i	
-}					t_data;*/
+	t_opt			flag;
+	char			letter;
+	char			*word;
+}					t_args;
+
+typedef struct		s_data
+{
+	char			*name;
+	struct stat		*data;
+}					t_data; // contient toutes les infos d'un fichier/dossier/etc
 
 typedef struct		s_env
 {
 	t_opt			options;
-	t_dblist		*files;
-	t_dblist		*dirs;
+	t_dblist		*files; // contient une struct data
+	// à imprimer dès après le parsing des params
+	//à clear après
+	t_dblist		*dirs; // contient 
 	DIR				*cur_dir;
 }					t_env;
 
