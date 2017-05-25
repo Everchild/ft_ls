@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/16 15:26:13 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/05/16 16:47:45 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/05/25 12:12:19 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,10 @@ static void			parse_entry(t_env *env, char *arg)
 		ft_printf("ft_ls: cannot access ");
 		perror(arg);
 	}
-	else if (S_ISDIR(buf.st_mode))
-	{
-		data.name = ft_strdup(arg);
-		data.data
-		new = create_node(arg, sizeof(t_data));
-		if (!env->dirs)
-			env->dirs = create_list();
-		add_node_end(&env->dirs, new);
-	}
+	else if (S_ISDIR(ibuf.st_mode))
+		init_dir(env);
 	else
-	{
-	
-	}
+		init_file(env);
 }
 
 static void			parse_long_opt(t_env *env, char *arg, t_args *all)
