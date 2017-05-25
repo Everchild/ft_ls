@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/15 17:10:50 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/05/25 12:12:16 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/05/25 17:53:02 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,27 +38,21 @@ typedef struct		s_args
 	char			*word;
 }					t_args;
 
-typedef struct		s_file
+typedef struct		s_entry
 {
 	char			*name;
 	struct stat		*data;
-}					t_file; // contient toutes les infos d'un fichier
-
-typedef struct		s_dir
-{
-	char			*name;
-	struct stat		*data;
-	t_dblist		*content;
-}					t_dir;
+	t_dblist		*content; // init seulement si l'entree est un dossier
+}					t_entry;
 
 typedef struct		s_env
 {
 	t_opt			options;
-	t_dblist		*files; // contient une struct t_file
+	t_dblist		*files; // struct t_entry -> uniquement des fichiers (parametres)
 	// à imprimer dès après le parsing des params
-	//à clear après
+	//à clear juste après
 	t_dblist		*dirs; // contient les dossiers en parametre / si pas de param, 1 seul noeud egal a "."
-	DIR				*cur_dir;
+//	DIR				*cur_dir;
 }					t_env;
 
 void				parse_arg(t_env *env, char **arg);

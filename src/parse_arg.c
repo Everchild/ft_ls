@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/16 15:26:13 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/05/25 12:12:19 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/05/25 17:53:00 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,18 +27,25 @@ static t_args			*get_all_args(void)
 static void			parse_entry(t_env *env, char *arg)
 {
 	t_node			*new;
-	t_data			data;
-	struct stat		buf;
+	t_entry			entry;
+	struct stat		*buf;
 
-	if (lstat(arg, &buf) == -1)
+	if (lstat(arg, buf) == -1)
 	{
 		ft_printf("ft_ls: cannot access ");
 		perror(arg);
 	}
-	else if (S_ISDIR(ibuf.st_mode))
-		init_dir(env);
 	else
-		init_file(env);
+	{
+		entry.name = ft_strdup(arg);
+		entry.data = ft_memdup((void *)buf, sizeof(struct stat *));
+		entry.content = NULL;
+		new = create_node();
+//		if (S_ISDIR(buf.st_mode))
+//			init_dir(env, );
+//		else
+//			init_file(env);
+	}
 }
 
 static void			parse_long_opt(t_env *env, char *arg, t_args *all)
