@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/15 17:10:50 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/05/25 17:53:02 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/05/27 02:38:22 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <uuid/uuid.h>
 # include <dirent.h>
 # include <libft.h>
 # include <stdio.h>
@@ -41,8 +42,8 @@ typedef struct		s_args
 typedef struct		s_entry
 {
 	char			*name;
-	struct stat		*data;
-	t_dblist		*content; // init seulement si l'entree est un dossier
+	struct stat		data;
+	t_dblist		*content; // init seulement si l'entree est un dossier, au moment ou on opendir/readdir
 }					t_entry;
 
 typedef struct		s_env
@@ -51,7 +52,7 @@ typedef struct		s_env
 	t_dblist		*files; // struct t_entry -> uniquement des fichiers (parametres)
 	// à imprimer dès après le parsing des params
 	//à clear juste après
-	t_dblist		*dirs; // contient les dossiers en parametre / si pas de param, 1 seul noeud egal a "."
+	t_dblist		*dirs; // contient les dossiers en parametre (char * seulement) / si pas de param, 1 seul noeud egal a "."
 //	DIR				*cur_dir;
 }					t_env;
 
