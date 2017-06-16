@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/15 17:10:50 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/05/27 02:38:22 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/06/05 20:52:53 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,30 +32,31 @@ typedef enum		e_opt
 	O_TIME =  1 << 5
 }					t_opt;
 
-typedef struct		s_args
+typedef struct		s_app_opts
 {
 	t_opt			flag;
 	char			letter;
 	char			*word;
-}					t_args;
+}					t_app_optss;
 
 typedef struct		s_entry
 {
 	char			*name;
-	struct stat		data;
-	t_dblist		*content; // init seulement si l'entree est un dossier, au moment ou on opendir/readdir
+	struct stat		*data;
+	t_bool			isdir;
 }					t_entry;
 
-typedef struct		s_env
-{
-	t_opt			options;
-	t_dblist		*files; // struct t_entry -> uniquement des fichiers (parametres)
-	// à imprimer dès après le parsing des params
-	//à clear juste après
-	t_dblist		*dirs; // contient les dossiers en parametre (char * seulement) / si pas de param, 1 seul noeud egal a "."
-//	DIR				*cur_dir;
-}					t_env;
+//le main appelle
+t_opt				handle_params(char **params, t_dblist **dirs);
+void				ft_ls(t_opt options, t_dblist *dirs);
 
-void				parse_arg(t_env *env, char **arg);
+//handle_params appelle
+void				parse_long_opt(t_opt *options, char *flag);
+void				parse_short_opt(t_opt *options, char *flag);
+void				parse_entry(char *param, t_dblist **dirs, t_dblist **files);
+void				handle_files_in_param(t_opt options, t_dblist *files);
+
+//parse_entry appelle
+void				register_file_data(char *name, t_dblist **files, struct stat buf);
 
 #endif
