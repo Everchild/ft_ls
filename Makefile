@@ -6,7 +6,7 @@
 #    By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/05/15 17:13:45 by sbrochar          #+#    #+#              #
-#    Updated: 2017/05/16 16:47:40 by sbrochar         ###   ########.fr        #
+#    Updated: 2017/06/16 16:03:19 by sbrochar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,8 +19,7 @@ OBJ_DIR = ./obj
 LIB_DIR = ./libft
 LIB_INC = $(LIB_DIR)/inc
 
-SRC = main.c \
-	  parse_arg.c
+SRC = main.c
 OBJ = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
 
 CC = clang
