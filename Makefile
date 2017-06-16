@@ -6,7 +6,7 @@
 #    By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/05/15 17:13:45 by sbrochar          #+#    #+#              #
-#    Updated: 2017/06/16 16:03:19 by sbrochar         ###   ########.fr        #
+#    Updated: 2017/06/16 18:50:36 by sbrochar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,13 @@ OBJ_DIR = ./obj
 LIB_DIR = ./libft
 LIB_INC = $(LIB_DIR)/inc
 
-SRC = main.c
+SRC = main.c \
+	  parse_parameters.c \
+	  handle_files_in_param.c \
+	  ft_ls.c \
+	  sort.c \
+	  print_data.c \
+	  free_data.c
 OBJ = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
 
 CC = clang

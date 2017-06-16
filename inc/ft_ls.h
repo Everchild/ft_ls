@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/15 17:10:50 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/06/16 16:06:11 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/06/16 20:28:45 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct		s_app_opts
 	t_opt			flag;
 	char			letter;
 	char			*word;
-}					t_app_optss;
+}					t_app_opts;
 
 typedef struct		s_entry
 {
