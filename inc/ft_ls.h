@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/15 17:10:50 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/06/16 20:28:45 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/06/28 23:04:10 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <libft.h>
 # include <stdio.h>
 
-# define NB_OPT 5
+# define NB_OPT 6
 
 typedef enum		e_opt
 {
@@ -30,7 +30,8 @@ typedef enum		e_opt
 	O_ALL = 1 << 3,
 	O_REVERSE = 1 << 4,
 	O_TIME =  1 << 5,
-	O_LONG = 1 << 6
+	O_LONG = 1 << 6,
+	O_DEFAULT = 1 << 7
 	
 }					t_opt;
 
@@ -48,6 +49,7 @@ typedef struct		s_entry
 	t_bool			isdir;
 }					t_entry;
 
+t_app_opts			*get_app_opts(void);
 t_opt				handle_params(char **params, t_dblist **dirs);
 void				handle_files_in_param(t_opt options, t_dblist *files);
 void				register_param_data(char *name, t_dblist **files, struct stat buf);

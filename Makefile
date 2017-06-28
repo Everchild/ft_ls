@@ -6,7 +6,7 @@
 #    By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/05/15 17:13:45 by sbrochar          #+#    #+#              #
-#    Updated: 2017/06/16 18:50:36 by sbrochar         ###   ########.fr        #
+#    Updated: 2017/06/28 15:39:53 by sbrochar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ LIB_DIR = ./libft
 LIB_INC = $(LIB_DIR)/inc
 
 SRC = main.c \
+	  get_app_opts.c \
 	  parse_parameters.c \
 	  handle_files_in_param.c \
 	  ft_ls.c \

@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/16 18:22:58 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/06/16 20:28:42 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/06/28 13:30:22 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,15 +61,12 @@ void				ft_ls(t_opt options, t_dblist *dirs)
 	content = create_list();
 	while (dirs->start)
 	{
-		ft_printf("dossier: %s\n", dirs->start->content);
 		cur = dirs->start;
 		get_dir_content(options, cur->content, content);
-		ft_printf("test3\n");
 		if (options & O_TIME)
 			sort_timestamp(content);
 		else
 			sort_ascii(content);
-		ft_printf("test4\n");
 		print_data(dirs, options, content);
 		free_data(content);
 		clear_list(&content);
