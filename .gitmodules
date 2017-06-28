@@ -1,0 +1,3 @@
+[submodule "libt"]
+	path = libft
+	url = https://github.com/Everchild/libft.git
