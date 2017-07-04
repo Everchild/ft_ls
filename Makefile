@@ -6,7 +6,7 @@
 #    By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/05/15 17:13:45 by sbrochar          #+#    #+#              #
-#    Updated: 2017/06/28 15:39:53 by sbrochar         ###   ########.fr        #
+#    Updated: 2017/06/29 12:20:31 by sbrochar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ SRC = main.c \
 	  handle_files_in_param.c \
 	  ft_ls.c \
 	  sort.c \
+	  get_long_print_info.c \
 	  print_data.c \
 	  free_data.c
 OBJ = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))

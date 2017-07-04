@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/15 17:10:50 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/06/28 23:04:10 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/07/03 09:24:07 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <pwd.h>
+# include <grp.h>
 # include <uuid/uuid.h>
 # include <dirent.h>
 # include <libft.h>
@@ -58,6 +60,7 @@ void				ft_ls(t_opt options, t_dblist *dirs);
 
 void				sort_timestamp(t_dblist *list);
 void				sort_ascii(t_dblist *list);
+char				*get_permissions(struct stat *data);
 void				print_data(t_dblist *dirs, t_opt options, t_dblist *data);
 void				free_data(t_dblist *list);
 
