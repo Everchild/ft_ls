@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/16 17:37:08 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/07/04 11:49:49 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/07/05 11:02:53 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static void			print_long(size_t *col_width, t_node *entry)
 	struct passwd	*data_usr;
 	struct group	*data_grp;
 	char			*tmp;
-	time_t			last_modif;
+	char			*year;
 
 	data_usr = getpwuid(((t_entry *)entry->content)->data->st_uid);
 	data_grp = getgrgid(((t_entry *)entry->content)->data->st_gid);
@@ -28,9 +28,19 @@ static void			print_long(size_t *col_width, t_node *entry)
 	ft_printf("%-*s", col_width[1], data_usr->pw_name);
 	ft_printf("%*s ", col_width[2], data_grp->gr_name);
 	ft_printf("%*d ", col_width[3], ((t_entry *)entry->content)->data->st_size);
-	last_modif = time(&(((t_entry *)entry->content)->data->st_mtime));
-	tmp = ft_strsub(ctime(&last_modif), 4, 12);
-	ft_printf("%s ", tmp);
+//	ft_printf(" %s ", ctime(&(((t_entry *)entry->content)->data->st_mtime)));
+	if ((time(NULL) - ((t_entry *)entry->content)->data->st_mtime) >= 15552000)
+	{
+		tmp = ft_strsub(ctime(&(((t_entry *)entry->content)->data->st_mtime)), 4, 7);
+		year = ft_strsub(ctime(&(((t_entry *)entry->content)->data->st_mtime)), 19, 5);
+		ft_printf("%s%s ", tmp, year);
+		ft_strdel(&year);
+	}
+	else
+	{
+		tmp = ft_strsub(ctime(&(((t_entry *)entry->content)->data->st_mtime)), 4, 12);
+		ft_printf("%s ", tmp);
+	}
 	ft_strdel(&tmp);
 	ft_printf("%s", ((t_entry *)entry->content)->name);
 	ft_printf("\n");
