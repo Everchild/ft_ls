@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/15 17:10:50 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/07/03 09:24:07 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/07/09 23:01:13 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,24 +44,34 @@ typedef struct		s_app_opts
 	char			*word;
 }					t_app_opts;
 
+typedef enum		e_perms
+{
+	P_NONE = 0,
+	P_READ = 1 << 1,
+	P_EXEC = 1 << 2,
+	P_FILE = 1 << 3
+}					t_perms;
+
 typedef struct		s_entry
 {
 	char			*name;
 	struct stat		*data;
 	t_bool			isdir;
+	t_perms			perms;
 }					t_entry;
 
 t_app_opts			*get_app_opts(void);
 t_opt				handle_params(char **params, t_dblist **dirs);
-void				handle_files_in_param(t_opt options, t_dblist *files);
+void				handle_files_in_param(t_opt options, t_dblist *files, t_bool dirs);
 void				register_param_data(char *name, t_dblist **files, struct stat buf);
 
 void				ft_ls(t_opt options, t_dblist *dirs);
 
 void				sort_timestamp(t_dblist *list);
 void				sort_ascii(t_dblist *list);
+int					get_total(t_dblist *data);
 char				*get_permissions(struct stat *data);
-void				print_data(t_dblist *dirs, t_opt options, t_dblist *data);
+void				print_data(t_dblist *dirs, t_opt options, t_dblist *data, t_bool params);
 void				free_data(t_dblist *list);
 
 #endif

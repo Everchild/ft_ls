@@ -6,11 +6,26 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/29 12:05:49 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/06/29 12:24:37 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/07/09 11:04:48 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_ls.h>
+
+int					get_total(t_dblist *data)
+{
+	int				total;
+	t_node			*cur;
+
+	total = 0;
+	cur = data->start;
+	while (cur)
+	{
+		total += ((t_entry *)cur->content)->data->st_blocks;
+		cur = cur->next;
+	}
+	return (total);
+}
 
 char				*get_permissions(struct stat *data)
 {

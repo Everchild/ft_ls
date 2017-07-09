@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/16 15:26:13 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/06/28 16:44:46 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/07/09 23:01:04 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ static void			check_params(t_opt options, t_dblist *invalid, t_dblist *files, t_
 		}
 	}
 	if (!(options & O_INVAL) && files)
-		handle_files_in_param(options, files);
+		handle_files_in_param(options, files, *dirs ? TRUE : FALSE);
 }
 
 t_opt				handle_params(char **params, t_dblist **dirs)
@@ -131,6 +131,8 @@ t_opt				handle_params(char **params, t_dblist **dirs)
 				parse_long_opt(&options, (*params) + 2);
 			else if ((*params)[1] == '-' && !(*params)[2])
 				end_opt = TRUE;
+			else if (!(*params)[1])
+				parse_entry(*params, dirs, &files, &invalid);
 			else
 				parse_short_opt(&options, (*params) + 1);
 		}

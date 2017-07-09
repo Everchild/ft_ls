@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/16 17:37:08 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/07/05 11:02:53 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/07/09 22:25:02 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,12 @@ static void			print_long(size_t *col_width, t_node *entry)
 	ft_printf("%s ", tmp);
 	ft_strdel(&tmp);
 	ft_printf("%*d ", col_width[0], ((t_entry *)entry->content)->data->st_nlink);
-	ft_printf("%-*s", col_width[1], data_usr->pw_name);
-	ft_printf("%*s ", col_width[2], data_grp->gr_name);
+	if (data_usr)
+		ft_printf("%-*s ", col_width[1], data_usr->pw_name);
+	else
+		ft_printf("%-*d ", col_width[1], ((t_entry *)entry->content)->data->st_uid);
+	ft_printf("%-*s", col_width[2], data_grp->gr_name);
 	ft_printf("%*d ", col_width[3], ((t_entry *)entry->content)->data->st_size);
-//	ft_printf(" %s ", ctime(&(((t_entry *)entry->content)->data->st_mtime)));
 	if ((time(NULL) - ((t_entry *)entry->content)->data->st_mtime) >= 15552000)
 	{
 		tmp = ft_strsub(ctime(&(((t_entry *)entry->content)->data->st_mtime)), 4, 7);
@@ -58,12 +60,18 @@ static void			print_reverse(size_t *col_width, t_dblist *dirs, t_opt options, t_
 		first = dirs->start;
 	while (cur)
 	{
-		if ((options & O_RECURS) && S_ISDIR(((t_entry *)cur->content)->data->st_mode))
+		if (ft_strcmp(((t_entry *)cur->content)->name, ".") && ft_strcmp(((t_entry *)cur->content)->name, ".."))
 		{
-			tmp = ft_strcjoin(first->content, ((t_entry *)cur->content)->name, '/');
-			new_dir = create_node(tmp, ft_strlen(tmp) + 1);
-			insert_node(&dirs, new_dir, first);
-			ft_strdel(&tmp);
+			if ((options & O_RECURS) && S_ISDIR(((t_entry *)cur->content)->data->st_mode))
+			{
+				if (((char *)first->content)[0] == '/' && ((char *)first->content)[1] == '\0')
+					tmp = ft_strjoin(first->content, ((t_entry *)cur->content)->name);
+				else
+					tmp = ft_strcjoin(first->content, ((t_entry *)cur->content)->name, '/');
+				new_dir = create_node(tmp, ft_strlen(tmp) + 1);
+				insert_node(&dirs, new_dir, first);
+				ft_strdel(&tmp);
+			}
 		}
 		if (options & O_LONG)
 			print_long(col_width, cur);
@@ -90,7 +98,10 @@ static void			print_default(size_t *col_width, t_dblist *dirs, t_opt options, t_
 		{
 			if ((options & O_RECURS) && S_ISDIR(((t_entry *)cur->content)->data->st_mode))
 			{
-				tmp = ft_strcjoin(first->content, ((t_entry *)cur->content)->name, '/');
+				if (((char *)first->content)[0] == '/' && ((char *)first->content)[1] == '\0')
+					tmp = ft_strjoin(first->content, ((t_entry *)cur->content)->name);
+				else
+					tmp = ft_strcjoin(first->content, ((t_entry *)cur->content)->name, '/');
 				new_dir = create_node(tmp, ft_strlen(tmp) + 1);
 				insert_node(&dirs, new_dir, first);
 				ft_strdel(&tmp);
@@ -123,7 +134,10 @@ static size_t		*min_col_width(t_opt options, t_dblist *data)
 		{
 			tmp = ft_strlen(ft_itoa(((t_entry *)cur->content)->data->st_nlink)) + 1;
 			ret[0] = tmp > ret[0] ? tmp : ret[0];
-			tmp = ft_strlen((getpwuid(((t_entry *)cur->content)->data->st_uid))->pw_name) + 1;
+			if (getpwuid(((t_entry *)cur->content)->data->st_uid))
+				tmp = ft_strlen((getpwuid(((t_entry *)cur->content)->data->st_uid))->pw_name) + 1;
+			else
+				tmp = ft_strlen(ft_itoa(((t_entry *)cur->content)->data->st_uid));
 			ret[1] = tmp > ret[1] ? tmp : ret[1];
 			tmp = ft_strlen((getgrgid(((t_entry *)cur->content)->data->st_gid))->gr_name) + 1;
 			ret[2] = tmp > ret[2] ? tmp : ret[2];
@@ -135,29 +149,27 @@ static size_t		*min_col_width(t_opt options, t_dblist *data)
 	return (ret);
 }
 
-void				print_data(t_dblist *dirs, t_opt options, t_dblist *data)
+void				print_data(t_dblist *dirs, t_opt options, t_dblist *data, t_bool params)
 {
 	static t_bool	first_dir = TRUE;
-	int				total;
-	t_node			*cur;
+
 	if (dirs && ft_strcmp(dirs->start->content, ".") && !(first_dir && dirs->start == dirs->end))
 		ft_printf("%s:\n", dirs->start->content);
-	if (dirs && (options & O_LONG))
+	if (data->start)
 	{
-		total = 0;
-		cur = data->start;
-		while (cur)
+		if ((((t_entry *)data->start->content)->isdir && !(((t_entry *)data->start->content)->perms & P_READ)))
+			ft_printf("ls: %s: Permission denied\n", dirs->start->content);
+		else if (  ((((t_entry *)data->start->content)->perms & P_READ) && (((t_entry *)data->start->content)->perms & P_EXEC)) || ! ((t_entry *)data->start->content)->isdir)
 		{
-			total += ((t_entry *)cur->content)->data->st_blocks;
-			cur = cur->next;
+			if (dirs && (options & O_LONG))
+				ft_printf("total %d\n", get_total(data));
+			if (options & O_REVERSE)
+				print_reverse(min_col_width(options, data), dirs, options, data);
+			else
+				print_default(min_col_width(options, data), dirs, options, data);
 		}
-		ft_printf("total %d\n", total);
 	}
-	if (options & O_REVERSE)
-		print_reverse(min_col_width(options, data), dirs, options, data);
-	else
-		print_default(min_col_width(options, data), dirs, options, data);
-	if (!dirs || (dirs && dirs->start != dirs->end))
+	if ((!(dirs) && params) || (dirs && dirs->start != dirs->end))
 		ft_printf("\n");
 	if (first_dir)
 		first_dir = FALSE;
