@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/15 17:12:03 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/07/09 23:06:58 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/07/11 08:16:29 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int					main(int argc, char **argv)
 	else*/
 		options = handle_params(argv + 1, &dirs);
 	if (options & O_INVAL)
-		ft_printf("ls: illegal option -- \nusage: ft_ls [-ABCFGHLOPRSTUWabcdefghiklmnopqrstuwx1] [file ...]\n");
+		ft_printf("ls: illegal option -- \nusage: ft_ls [-Ralrt1] [file ...]\n");
 	else if (dirs)
 	{
 		ft_ls(options, dirs);

@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/16 18:22:58 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/07/09 22:21:22 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/07/11 08:23:54 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,28 +28,24 @@ static t_bool		get_dir_permissions(char *dir, t_perms *perms)
 	return ((*perms & P_EXEC) && (*perms & P_READ));
 }
 
-static t_bool		register_struct_stat(/*t_opt options, */char *dir, t_entry *entry)
+static t_bool		register_struct_stat(char *dir, t_entry *entry)
 {
 	struct stat		buf;
 	char			*tmp;
 
-//	if ((options & O_LONG) || (options & O_TIME) || options & O_RECURS)
-//	{
-		if (!ft_strcmp(dir, "/"))
-			tmp = ft_strjoin(dir, entry->name);
-		else
-			tmp = ft_strcjoin(dir, entry->name, '/');
-		if (lstat(tmp, &buf) == -1)
-			return (FALSE);
-		entry->data = (struct stat *)ft_memdup(&buf, sizeof(struct stat));
-		ft_strdel(&tmp);
-		return (TRUE);
-//	}
-//	else
-//		entry->data = NULL;
+	if (!ft_strcmp(dir, "/"))
+		tmp = ft_strjoin(dir, entry->name);
+	else
+		tmp = ft_strcjoin(dir, entry->name, '/');
+	if (lstat(tmp, &buf) == -1)
+		return (FALSE);
+	entry->data = (struct stat *)ft_memdup(&buf, sizeof(struct stat));
+	ft_strdel(&tmp);
+	return (TRUE);
 }
 
-static void			get_dir_content(t_opt options, char *name, t_dblist *content)
+static void			get_dir_content(t_opt options, char *name,
+					t_dblist *content)
 {
 	DIR				*dir;
 	struct dirent	*data;
@@ -63,7 +59,7 @@ static void			get_dir_content(t_opt options, char *name, t_dblist *content)
 			if (!(options & O_ALL) && data->d_name[0] == '.')
 				continue ;
 			entry.name = ft_strdup(data->d_name);
-			if (!register_struct_stat(/*options, */name, &entry))
+			if (!register_struct_stat(name, &entry))
 				continue ;
 			entry.isdir = data->d_type & DT_DIR ? TRUE : FALSE;
 			entry.perms = P_READ | P_EXEC; // a verifier
@@ -75,7 +71,8 @@ static void			get_dir_content(t_opt options, char *name, t_dblist *content)
 	}
 }
 
-static void			init_dir_without_perm(t_dblist *content, char *name, t_perms perms)
+static void			init_dir_without_perm(t_dblist *content, char *name,
+					t_perms perms)
 {
 	t_entry			entry;
 	t_node			*node;

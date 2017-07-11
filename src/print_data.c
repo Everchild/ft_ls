@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/16 17:37:08 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/07/09 22:25:02 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/07/11 08:47:52 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,13 @@ static void			print_long(size_t *col_width, t_node *entry)
 	}
 	ft_strdel(&tmp);
 	ft_printf("%s", ((t_entry *)entry->content)->name);
+	if ((((t_entry *)entry->content)->data->st_mode & S_IFMT) == S_IFLNK)
+	{
+		tmp = ft_strnew(BUFF_SIZE);
+		if (readlink(((t_entry *)entry->content)->name, tmp, BUFF_SIZE) != -1)
+			ft_printf(" -> %s", tmp);
+		ft_strdel(&tmp);
+	}
 	ft_printf("\n");
 }
 

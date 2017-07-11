@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/16 15:26:13 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/07/09 23:01:04 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/07/11 04:18:00 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,13 @@ static void			parse_short_opt(t_opt *options, char *flag)
 		flag++;
 	}
 }
+static t_bool		check_links(char *param)
+{
+	struct stat		buf;
+
+	stat(param, &buf);
+	return (S_ISDIR(buf.st_mode));
+}
 
 static void			parse_entry(char *param, t_dblist **dirs, t_dblist **files, t_dblist **invalid)
 {
@@ -74,6 +81,19 @@ static void			parse_entry(char *param, t_dblist **dirs, t_dblist **files, t_dbli
 			add_node_end(invalid, node);
 //		ft_printf("ls: ");
 //		perror(param);
+	}
+	else if ((S_IFMT & buf.st_mode) == S_IFLNK)
+	{
+		if (check_links(param))
+		{
+			if (!*dirs)
+				*dirs = create_list();
+			node = create_node(param, ft_strlen(param) + 1);
+			if (*dirs && node)
+				add_node_end(dirs, node);
+		}
+		else
+			register_param_data(param, files, buf);
 	}
 	else if (S_ISDIR(buf.st_mode))
 	{
@@ -99,7 +119,9 @@ static void			check_params(t_opt options, t_dblist *invalid, t_dblist *files, t_
 	}
 	if (!(options & O_INVAL) && invalid)
 	{
-		sort_ascii(invalid);
+		//ft_printf("sisi\n");
+		sort_list(&invalid);
+		//ft_printf("sisi\n");
 		node = invalid->start;
 		while (node)
 		{
@@ -123,16 +145,20 @@ t_opt				handle_params(char **params, t_dblist **dirs)
 	files = NULL;
 	invalid = NULL;
 	end_opt = FALSE;
+	//ft_printf("wesh\n");
 	while (*params)
 	{
 		if (!end_opt && (*params)[0] == '-')
 		{
 			if ((*params)[1] == '-' && (*params)[2])
 				parse_long_opt(&options, (*params) + 2);
-			else if ((*params)[1] == '-' && !(*params)[2])
+			else if (((*params)[1] == '-' && !(*params)[2]))
 				end_opt = TRUE;
 			else if (!(*params)[1])
+			{
 				parse_entry(*params, dirs, &files, &invalid);
+				end_opt = TRUE;
+			}
 			else
 				parse_short_opt(&options, (*params) + 1);
 		}
@@ -140,6 +166,7 @@ t_opt				handle_params(char **params, t_dblist **dirs)
 			parse_entry(*params, dirs, &files, &invalid);
 		params++;
 	}
+	//ft_printf("yo\n");
 	check_params(options, invalid, files, dirs);
 	return (options);
 }

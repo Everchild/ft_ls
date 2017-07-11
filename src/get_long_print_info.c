@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/29 12:05:49 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/07/09 11:04:48 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/07/11 08:47:54 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,34 @@ char				*get_permissions(struct stat *data)
 {
 	char			*ret;
 
-	ret = (char *)ft_memalloc(sizeof(char) * 11);
-	ret[0] = S_ISDIR(data->st_mode) ? 'd' : '-';
-	ret[1] = data->st_mode & S_IRUSR ? 'r' : '-';
-	ret[2] = data->st_mode & S_IWUSR ? 'w' : '-';
-	ret[3] = data->st_mode & S_IXUSR ? 'x' : '-';
-	ret[4] = data->st_mode & S_IRGRP ? 'r' : '-';
-	ret[5] = data->st_mode & S_IWGRP ? 'w' : '-';
-	ret[6] = data->st_mode & S_IXGRP ? 'x' : '-';
-	ret[7] = data->st_mode & S_IROTH ? 'r' : '-';
-	ret[8] = data->st_mode & S_IWOTH ? 'w' : '-';
-	ret[9] = data->st_mode & S_IXOTH ? 'x' : '-';
+	ret = ft_strdup("----------");
+	if (S_ISDIR(data->st_mode))
+		ret[0] = 'd';
+	else if ((S_IFMT & data->st_mode) == S_IFLNK)
+		ret[0] = 'l';
+	ret[1] = data->st_mode & S_IRUSR ? 'r' : ret[1];
+	ret[2] = data->st_mode & S_IWUSR ? 'w' : ret[2];
+	if ((data->st_mode & S_ISUID) && !(data->st_mode & S_IXUSR))
+		ret[3] = 'S';
+	else if (data->st_mode & S_ISUID)
+		ret[3] = 's';
+	else if (data->st_mode & S_IXUSR)
+		ret[3] = 'x';
+	ret[4] = data->st_mode & S_IRGRP ? 'r' : ret[4];
+	ret[5] = data->st_mode & S_IWGRP ? 'w' : ret[5];
+	if ((data->st_mode & S_ISGID) && !(data->st_mode & S_IXGRP))
+		ret[6] = 'S';
+	else if (data->st_mode & S_ISGID)
+		ret[6] = 's';
+	else if (data->st_mode & S_IXGRP)
+		ret[6] = 'x';
+	ret[7] = data->st_mode & S_IROTH ? 'r' : ret[7];
+	ret[8] = data->st_mode & S_IWOTH ? 'w' : ret[8];
+	if (data->st_mode & S_ISVTX && !(data->st_mode & S_IXOTH))
+		ret[9] = 'T';
+	else if (data->st_mode & S_ISVTX)
+		ret[9] = 't';
+	else if (data->st_mode & S_IXOTH)
+		ret[9] = 'x';
 	return (ret);
 }
