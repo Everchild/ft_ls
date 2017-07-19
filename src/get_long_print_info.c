@@ -6,13 +6,13 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/29 12:05:49 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/07/17 17:26:11 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/07/19 09:24:55 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_ls.h>
 
-static char			*get_permissions(struct stat *data)
+static char			*get_permissions(char *path, struct stat *data)
 {
 	char			*ret;
 
@@ -53,10 +53,11 @@ static char			*get_permissions(struct stat *data)
 		ret[9] = 't';
 	else if (data->st_mode & S_IXOTH)
 		ret[9] = 'x';
+	ret[10] = listxattr(path, NULL, 0, XATTR_NOFOLLOW) > 0 ? '@' : ret[10];
 	return (ret);
 }
 
-void				print_long(size_t *col_width, t_node *entry)
+void				print_long(char *path, size_t *col_width, t_node *entry)
 {
 	struct passwd	*data_usr;
 	struct group	*data_grp;
@@ -65,7 +66,7 @@ void				print_long(size_t *col_width, t_node *entry)
 
 	data_usr = getpwuid(((t_entry *)entry->content)->data->st_uid);
 	data_grp = getgrgid(((t_entry *)entry->content)->data->st_gid);
-	tmp = get_permissions(((t_entry *)entry->content)->data);
+	tmp = get_permissions(path, ((t_entry *)entry->content)->data);
 	ft_printf("%s", tmp);
 	ft_strdel(&tmp);
 	ft_printf("%*d ", col_width[0], ((t_entry *)entry->content)->data->st_nlink);
@@ -81,7 +82,7 @@ void				print_long(size_t *col_width, t_node *entry)
 		ft_printf("%*d, %*d ", col_width[3], major(((t_entry *)entry->content)->data->st_rdev), col_width[4], minor(((t_entry *)entry->content)->data->st_rdev));
 	else
 		ft_printf("%*d ", col_width[3], ((t_entry *)entry->content)->data->st_size);
-	if ((time(NULL) - ((t_entry *)entry->content)->data->st_mtime) >= 15552000)
+	if ((time(NULL) - ((t_entry *)entry->content)->data->st_mtime) >= (525600 * 60) / 2)
 	{
 		tmp = ft_strsub(ctime(&(((t_entry *)entry->content)->data->st_mtime)), 4, 7);
 		year = ft_strsub(ctime(&(((t_entry *)entry->content)->data->st_mtime)), 19, 5);
@@ -98,7 +99,7 @@ void				print_long(size_t *col_width, t_node *entry)
 	if ((((t_entry *)entry->content)->data->st_mode & S_IFMT) == S_IFLNK)
 	{
 		tmp = ft_strnew(BUFF_SIZE);
-		if (readlink(((t_entry *)entry->content)->name, tmp, BUFF_SIZE) != -1)
+		if (readlink(path, tmp, BUFF_SIZE) != -1)
 			ft_printf(" -> %s", tmp);
 		ft_strdel(&tmp);
 	}

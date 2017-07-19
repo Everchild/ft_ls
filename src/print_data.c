@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/16 17:37:08 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/07/17 17:44:33 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/07/18 16:25:59 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,16 @@ static void			print_reverse(size_t *col_width, t_dblist *dirs, t_opt options, t_
 	t_node			*new_dir;
 	t_node			*first;
 	char			*tmp;
+	char			*cur_dir;
+	char			*path;
 
 	cur = data->end;
+	cur_dir = NULL;
 	if (dirs)
+	{
 		first = dirs->start;
+		cur_dir = dirs->start->content;
+	}
 	while (cur)
 	{
 		if (ft_strcmp(((t_entry *)cur->content)->name, ".") && ft_strcmp(((t_entry *)cur->content)->name, ".."))
@@ -81,10 +87,12 @@ static void			print_reverse(size_t *col_width, t_dblist *dirs, t_opt options, t_
 				ft_strdel(&tmp);
 			}
 		}
+		path = ft_strcjoin(cur_dir, ((t_entry *)cur->content)->name, '/');
 		if (options & O_LONG)
-			print_long(col_width, cur);
+			print_long(path, col_width, cur);
 		else
 			ft_printf("%s\n", ((t_entry *)cur->content)->name);
+		ft_strdel(&path);
 		cur = cur->prev;
 	}
 }
@@ -95,10 +103,15 @@ static void			print_default(size_t *col_width, t_dblist *dirs, t_opt options, t_
 	t_node			*new_dir;
 	t_node			*first;
 	char			*tmp;
+	char			*cur_dir;
+	char			*path;
 
 	cur = data->start;
 	if (dirs)
+	{
 		first = dirs->start;
+		cur_dir = dirs->start->content;
+	}
 	while (cur)
 	{
 		if (ft_strcmp(((t_entry *)cur->content)->name, ".") && ft_strcmp(((t_entry *)cur->content)->name, ".."))
@@ -114,10 +127,12 @@ static void			print_default(size_t *col_width, t_dblist *dirs, t_opt options, t_
 				ft_strdel(&tmp);
 			}
 		}
+		path = ft_strcjoin(cur_dir, ((t_entry *)cur->content)->name, '/');
 		if (options & O_LONG)
-			print_long(col_width, cur);
+			print_long(path, col_width, cur);
 		else
 			ft_printf("%s\n", ((t_entry *)cur->content)->name);
+		ft_strdel(&path);
 		cur = cur->next;
 	}
 }
@@ -133,7 +148,7 @@ void				print_data(t_dblist *dirs, t_opt options, t_dblist *data, t_bool params)
 	{
 		if ((((t_entry *)data->start->content)->isdir && !(((t_entry *)data->start->content)->perms & P_READ)))
 			ft_printf("ls: %s: Permission denied\n", dirs->start->content);
-		else if (  ((((t_entry *)data->start->content)->perms & P_READ) && (((t_entry *)data->start->content)->perms & P_EXEC)) || ! ((t_entry *)data->start->content)->isdir)
+		else if (((((t_entry *)data->start->content)->perms & P_READ) && (((t_entry *)data->start->content)->perms & P_EXEC)) || ! ((t_entry *)data->start->content)->isdir)
 		{
 			if (options & O_LONG)
 			{

@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/15 17:10:50 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/07/17 11:24:52 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/07/18 09:32:34 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <sys/xattr.h>
 # include <pwd.h>
 # include <grp.h>
 # include <uuid/uuid.h>
@@ -69,7 +70,7 @@ void				ft_ls(t_opt options, t_dblist *dirs);
 void				sort_timestamp(t_dblist *list);
 void				sort_ascii(t_dblist *list);
 void				print_data(t_dblist *dirs, t_opt options, t_dblist *data, t_bool params);
-void				print_long(size_t *col_width, t_node *entry);
+void				print_long(char *path, size_t *col_width, t_node *entry);
 int					get_total(t_dblist *data);
 void				free_data(t_dblist *list);
 
