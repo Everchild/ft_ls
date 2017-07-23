@@ -6,7 +6,7 @@
 #    By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/05/15 17:13:45 by sbrochar          #+#    #+#              #
-#    Updated: 2017/06/29 12:20:31 by sbrochar         ###   ########.fr        #
+#    Updated: 2017/07/23 11:08:52 by sbrochar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,9 @@ SRC = main.c \
 	  handle_files_in_param.c \
 	  ft_ls.c \
 	  sort.c \
-	  get_long_print_info.c \
+	  get_permissions.c \
+	  min_col_width.c \
+	  print_long.c \
 	  print_data.c \
 	  free_data.c
 OBJ = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))

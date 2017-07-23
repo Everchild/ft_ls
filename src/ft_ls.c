@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/16 18:22:58 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/07/17 17:42:45 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/07/23 11:59:21 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static t_bool		get_dir_permissions(char *dir, t_perms *perms)
 	struct stat		buf;
 
 	if (lstat(dir, &buf) < 0)
-		ft_printf("ALERTE ROUGE!");
+		ft_printf("");
 	else
 	{
 		if (buf.st_mode & S_IXUSR)
@@ -62,7 +62,7 @@ static void			get_dir_content(t_opt options, char *name,
 			if (!register_struct_stat(name, &entry))
 				continue ;
 			entry.isdir = data->d_type & DT_DIR ? TRUE : FALSE;
-			entry.perms = P_READ | P_EXEC; // a verifier
+			entry.perms = P_READ | P_EXEC;
 			node = create_node(&entry, sizeof(t_entry));
 			if (node)
 				add_node_end(&content, node);

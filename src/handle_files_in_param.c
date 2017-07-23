@@ -6,13 +6,14 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/16 16:50:16 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/07/11 08:15:18 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/07/23 11:59:39 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_ls.h>
 
-void				register_param_data(char *name, t_dblist **files, struct stat buf)
+void				register_param_data(char *name, t_dblist **files,
+					struct stat buf)
 {
 	t_node			*node;
 	t_entry			entry;
@@ -33,7 +34,8 @@ void				register_param_data(char *name, t_dblist **files, struct stat buf)
 		add_node_end(files, node);
 }
 
-void				handle_files_in_param(t_opt options, t_dblist *files, t_bool dirs)
+void				handle_files_in_param(t_opt options, t_dblist *files,
+					t_bool dirs)
 {
 	if (options & O_TIME)
 		sort_timestamp(files);
