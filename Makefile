@@ -6,7 +6,7 @@
 #    By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/05/15 17:13:45 by sbrochar          #+#    #+#              #
-#    Updated: 2017/07/23 11:08:52 by sbrochar         ###   ########.fr        #
+#    Updated: 2017/07/24 09:40:29 by sbrochar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,7 @@ LIB_INC = $(LIB_DIR)/inc
 SRC = main.c \
 	  get_app_opts.c \
 	  parse_parameters.c \
+	  parse_entry.c \
 	  handle_files_in_param.c \
 	  ft_ls.c \
 	  sort.c \

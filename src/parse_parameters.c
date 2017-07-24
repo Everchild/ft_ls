@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/16 15:26:13 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/07/23 12:03:40 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/07/24 09:40:31 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,54 +59,6 @@ static void			parse_short_opt(t_opt *options, char *flag)
 	}
 }
 
-static t_bool		check_links(char *param)
-{
-	struct stat		buf;
-
-	stat(param, &buf);
-	return (S_ISDIR(buf.st_mode));
-}
-
-static void			parse_entry(char *param, t_dblist **dirs, t_dblist **files,
-					t_dblist **invalid)
-{
-	struct stat		buf;
-	t_node			*node;
-
-	node = NULL;
-	if (lstat(param, &buf) == -1)
-	{
-		if (!*invalid)
-			*invalid = create_list();
-		node = create_node(param, ft_strlen(param) + 1);
-		if (*invalid && node)
-			add_node_end(invalid, node);
-	}
-	else if ((S_IFMT & buf.st_mode) == S_IFLNK)
-	{
-		if (check_links(param))
-		{
-			if (!*dirs)
-				*dirs = create_list();
-			node = create_node(param, ft_strlen(param) + 1);
-			if (*dirs && node)
-				add_node_end(dirs, node);
-		}
-		else
-			register_param_data(param, files, buf);
-	}
-	else if (S_ISDIR(buf.st_mode))
-	{
-		if (!*dirs)
-			*dirs = create_list();
-		node = create_node(param, ft_strlen(param) + 1);
-		if (*dirs && node)
-			add_node_end(dirs, node);
-	}
-	else
-		register_param_data(param, files, buf);
-}
-
 static void			check_params(t_opt options, t_dblist *invalid,
 					t_dblist *files, t_dblist **dirs)
 {
@@ -133,37 +85,45 @@ static void			check_params(t_opt options, t_dblist *invalid,
 		handle_files_in_param(options, files, *dirs ? TRUE : FALSE);
 }
 
-t_opt				handle_params(char **params, t_dblist **dirs)
+static t_dblist		*imtiredofthis(char **params, t_opt *options,
+					t_dblist **dirs, t_dblist **files)
 {
-	t_opt			options;
-	t_dblist		*files;
-	t_dblist		*invalid;
 	t_bool			end_opt;
+	t_dblist		*invalid;
 
-	options = NO_OPT;
-	files = NULL;
-	invalid = NULL;
 	end_opt = FALSE;
+	invalid = NULL;
 	while (*params)
 	{
 		if (!end_opt && (*params)[0] == '-')
 		{
 			if ((*params)[1] == '-' && (*params)[2])
-				parse_long_opt(&options, (*params) + 2);
-			else if (((*params)[1] == '-' && !(*params)[2]))
-				end_opt = TRUE;
-			else if (!(*params)[1])
+				parse_long_opt(options, (*params) + 2);
+			else if ((((*params)[1] == '-' && !(*params)[2])) || !(*params)[1])
 			{
-				parse_entry(*params, dirs, &files, &invalid);
 				end_opt = TRUE;
+				if (!(*params)[1])
+					parse_entry(*params, dirs, files, &invalid);
 			}
 			else
-				parse_short_opt(&options, (*params) + 1);
+				parse_short_opt(options, (*params) + 1);
 		}
 		else
-			parse_entry(*params, dirs, &files, &invalid);
+			parse_entry(*params, dirs, files, &invalid);
 		params++;
 	}
+	return (invalid);
+}
+
+t_opt				handle_params(char **params, t_dblist **dirs)
+{
+	t_opt			options;
+	t_dblist		*files;
+	t_dblist		*invalid;
+
+	options = NO_OPT;
+	files = NULL;
+	invalid = imtiredofthis(params, &options, dirs, &files);
 	check_params(options, invalid, files, dirs);
 	return (options);
 }

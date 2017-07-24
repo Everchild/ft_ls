@@ -6,7 +6,7 @@
 /*   By: sbrochar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/15 17:10:50 by sbrochar          #+#    #+#             */
-/*   Updated: 2017/07/23 11:09:14 by sbrochar         ###   ########.fr       */
+/*   Updated: 2017/07/24 09:41:40 by sbrochar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,19 @@ typedef struct		s_entry
 
 t_app_opts			*get_app_opts(void);
 t_opt				handle_params(char **params, t_dblist **dirs);
-void				handle_files_in_param(t_opt options, t_dblist *files, t_bool dirs);
-void				register_param_data(char *name, t_dblist **files, struct stat buf);
+void				parse_entry(char *param, t_dblist **dirs, t_dblist **files,
+					t_dblist **invalid);
+void				handle_files_in_param(t_opt options, t_dblist *files,
+					t_bool dirs);
+void				register_param_data(char *name, t_dblist **files,
+					struct stat buf);
 
 void				ft_ls(t_opt options, t_dblist *dirs);
 
 void				sort_timestamp(t_dblist *list);
 void				sort_ascii(t_dblist *list);
-void				print_data(t_dblist *dirs, t_opt options, t_dblist *data, t_bool params);
+void				print_data(t_dblist *dirs, t_opt options, t_dblist *data,
+					t_bool params);
 int					get_total(t_dblist *data);
 char				*get_permissions(char *path, struct stat *data);
 size_t				*min_col_width(t_dblist *data);
